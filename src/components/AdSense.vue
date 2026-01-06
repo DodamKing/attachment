@@ -6,7 +6,6 @@ const isAdLoaded = ref(false)
 let observer = null
 
 onMounted(() => {
-  // Intersection Observer로 Lazy Loading
   observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
@@ -16,7 +15,7 @@ onMounted(() => {
       })
     },
     {
-      rootMargin: '200px' // 화면에 200px 전에 미리 로드
+      rootMargin: '200px'
     }
   )
 
@@ -45,7 +44,6 @@ const loadAd = () => {
 
 <template>
   <div ref="adContainer" class="adsense-wrapper">
-    <div class="adsense-label">광고</div>
     <div class="adsense-container">
       <ins 
         class="adsbygoogle"
@@ -56,6 +54,8 @@ const loadAd = () => {
         data-full-width-responsive="true"
       ></ins>
     </div>
+    <!-- "광고" 레이블을 아래로 이동 (더 은은함) -->
+    <div class="adsense-label">AD</div>
   </div>
 </template>
 
@@ -63,15 +63,7 @@ const loadAd = () => {
 .adsense-wrapper {
   margin: 32px 0;
   width: 100%;
-}
-
-.adsense-label {
-  text-align: center;
-  font-size: 11px;
-  color: #aaa;
-  margin-bottom: 8px;
-  font-weight: 500;
-  letter-spacing: 0.5px;
+  max-width: 100%; /* 추가: 최대 너비 제한 */
 }
 
 .adsense-container {
@@ -85,11 +77,26 @@ const loadAd = () => {
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.6);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* 추가: 넘치는 광고 잘라냄 */
+  width: 100%;
+  max-width: 100%; /* 추가 */
 }
 
 .adsbygoogle {
-  background: transparent;
   width: 100%;
+  max-width: 100%; /* 추가 */
+  display: block; /* 추가 */
+}
+
+/* "광고" 레이블 - 아래, 더 작게 */
+.adsense-label {
+  text-align: center;
+  font-size: 10px;
+  color: #ccc;
+  margin-top: 8px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  opacity: 0.6;
 }
 
 /* 모바일 */
@@ -101,6 +108,11 @@ const loadAd = () => {
   .adsense-container {
     padding: 12px;
     border-radius: 12px;
+  }
+
+  .adsense-label {
+    font-size: 9px;
+    margin-top: 6px;
   }
 }
 </style>
