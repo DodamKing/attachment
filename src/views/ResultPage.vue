@@ -6,6 +6,7 @@ import ResultCard from '../components/ResultCard.vue'
 import ResultSection from '../components/ResultSection.vue'
 import ShareButton from '../components/ShareButton.vue'
 import CaptureGuide from '../components/CaptureGuide.vue'
+import AdSense from '../components/AdSense.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -51,7 +52,7 @@ const sectionIcons = {
 
 <template>
   <div class="result-container" v-if="resultData">
-    <!-- 결과 카드 (캡처용) -->
+    <!-- 결과 카드 -->
     <div class="result-card-wrapper slide-up">
       <ResultCard :resultData="resultData" />
     </div>
@@ -76,6 +77,9 @@ const sectionIcons = {
       />
     </div>
 
+    <!-- 🎯 광고 1 -->
+    <AdSense />
+
     <!-- 왜 힘든지 섹션 -->
     <div class="section-wrapper fade-in">
       <ResultSection
@@ -98,6 +102,9 @@ const sectionIcons = {
     <div class="footer-note">
       <p>이 테스트는 성인 애착 이론을 기반으로, 일상적인 연애 상황에 맞게 재구성한 자기이해용 콘텐츠입니다.</p>
     </div>
+
+    <!-- 🎯 광고 2 -->
+    <AdSense />
 
     <!-- 다시하기 버튼 -->
     <div class="retry-wrapper">
