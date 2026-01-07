@@ -46,18 +46,14 @@ export function useTest() {
 
     if (!choice) return;
 
-    // 기존 답변 제거 (같은 문항 재답변 시)
     answers.value = answers.value.filter((a) => a.questionId !== question.id);
 
-    // 새 답변 추가
     answers.value.push({
       questionId: question.id,
       choiceId: choice.id,
-      scores: choice.score, // { STABLE: 2, ANXIOUS: 1, ... }
-      boost: question.boost, // { ANXIOUS: 1, DISORG: 1, ... }
+      scores: choice.score,
     });
 
-    // localStorage 저장
     localStorage.setItem(STORAGE_KEYS.ANSWERS, JSON.stringify(answers.value));
   };
 
@@ -98,17 +94,11 @@ export function useTest() {
 
     // 점수 계산
     answers.value.forEach((answer) => {
-      const { scores, boost } = answer;
+      const { scores } = answer;
 
       Object.keys(scores).forEach((type) => {
         typeScores[type] += scores[type];
       });
-
-      if (boost) {
-        Object.keys(boost).forEach((type) => {
-          typeScores[type] += boost[type];
-        });
-      }
     });
 
     const totalScore = Object.values(typeScores).reduce(
@@ -120,12 +110,14 @@ export function useTest() {
       return null;
     }
 
-    // 유형 판정: DISORG는 불안+회피가 둘 다 높을 때만
+    // 유형 판정
     let resultType;
     const anxiousRatio = typeScores.ANXIOUS / totalScore;
     const avoidantRatio = typeScores.AVOIDANT / totalScore;
+    const disorgRatio = typeScores.DISORG / totalScore;
 
-    if (anxiousRatio >= 0.2 && avoidantRatio >= 0.2) {
+    // DISORG: 불안+회피 둘 다 25% 이상 + DISORG 점수 15% 이상
+    if (anxiousRatio >= 0.25 && avoidantRatio >= 0.25 && disorgRatio >= 0.15) {
       resultType = "DISORG";
     } else {
       // 4가지 중 최고점
