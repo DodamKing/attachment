@@ -46,6 +46,7 @@ const handleRetry = () => {
 const sectionIcons = {
   pattern: '🔍',
   why: '💭',
+  strength: '✨',  // 추가
   tips: '💡'
 }
 </script>
@@ -86,6 +87,15 @@ const sectionIcons = {
         title="왜 힘들까요?"
         :items="resultData.why"
         :icon="sectionIcons.why"
+      />
+    </div>
+
+    <!-- 강점 섹션 (새로 추가) -->
+    <div class="section-wrapper fade-in">
+      <ResultSection
+        title="이 유형의 강점"
+        :items="resultData.strength"
+        :icon="sectionIcons.strength"
       />
     </div>
 
@@ -181,6 +191,7 @@ const sectionIcons = {
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
 }
 
+/* 애니메이션 딜레이 조정 */
 .section-wrapper:nth-child(5) {
   animation-delay: 0.1s;
 }
@@ -191,6 +202,10 @@ const sectionIcons = {
 
 .section-wrapper:nth-child(7) {
   animation-delay: 0.3s;
+}
+
+.section-wrapper:nth-child(8) {
+  animation-delay: 0.4s;
 }
 
 @media (max-width: 480px) {

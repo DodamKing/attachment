@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTest } from '../composables/useTest'
 import ProgressBar from '../components/ProgressBar.vue'
@@ -20,9 +20,38 @@ const {
   calculateResult
 } = useTest()
 
+// 섞인 선택지 저장
+const shuffledQuestion = ref(null)
+
+// 선택지 섞기 함수
+const shuffleArray = (array) => {
+  const shuffled = [...array]
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
+  }
+  return shuffled
+}
+
+// 질문이 바뀔 때마다 선택지 섞기
+const updateShuffledQuestion = () => {
+  if (currentQuestion.value) {
+    shuffledQuestion.value = {
+      ...currentQuestion.value,
+      choices: shuffleArray(currentQuestion.value.choices)
+    }
+  }
+}
+
 // 초기화
 onMounted(() => {
   initTest()
+  updateShuffledQuestion()
+})
+
+// 질문 인덱스 변경 감지
+watch(currentQuestionIndex, () => {
+  updateShuffledQuestion()
 })
 
 // 선택 처리
@@ -82,8 +111,8 @@ const selectedChoiceId = () => {
     <!-- 문항 카드 -->
     <div class="question-wrapper fade-in" :key="currentQuestionIndex">
       <QuestionCard
-        v-if="currentQuestion"
-        :question="currentQuestion"
+        v-if="shuffledQuestion"
+        :question="shuffledQuestion"
         :selectedChoiceId="selectedChoiceId()"
         @select="handleSelect"
       />

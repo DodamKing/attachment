@@ -22,7 +22,9 @@ export function useTest() {
   const progress = computed(
     () => (answers.value.length / totalQuestions.value) * 100
   );
-  const isLastQuestion = computed(() => currentQuestionIndex.value === totalQuestions.value - 1)
+  const isLastQuestion = computed(
+    () => currentQuestionIndex.value === totalQuestions.value - 1
+  );
 
   // ===== 초기화 (localStorage에서 복원) =====
   const initTest = () => {
@@ -83,7 +85,6 @@ export function useTest() {
 
   // ===== 점수 계산 =====
   const calculateResult = () => {
-    // 답변이 없으면 null 반환
     if (answers.value.length === 0) {
       return null;
     }
@@ -95,16 +96,14 @@ export function useTest() {
       DISORG: 0,
     };
 
-    // 각 답변의 점수 계산
+    // 점수 계산
     answers.value.forEach((answer) => {
       const { scores, boost } = answer;
 
-      // 기본 점수 추가
       Object.keys(scores).forEach((type) => {
         typeScores[type] += scores[type];
       });
 
-      // boost 가중치 추가
       if (boost) {
         Object.keys(boost).forEach((type) => {
           typeScores[type] += boost[type];
@@ -112,32 +111,29 @@ export function useTest() {
       }
     });
 
-    // 총점 계산
     const totalScore = Object.values(typeScores).reduce(
       (sum, score) => sum + score,
       0
     );
 
-    // 총점이 0이면 null 반환 (혹시 모를 예외 처리)
     if (totalScore === 0) {
       return null;
     }
 
-    // 혼란형(DISORG) 우선 판정
+    // 유형 판정: DISORG는 불안+회피가 둘 다 높을 때만
+    let resultType;
     const anxiousRatio = typeScores.ANXIOUS / totalScore;
     const avoidantRatio = typeScores.AVOIDANT / totalScore;
 
-    let resultType;
-    if (anxiousRatio >= 0.25 && avoidantRatio >= 0.25) {
+    if (anxiousRatio >= 0.2 && avoidantRatio >= 0.2) {
       resultType = "DISORG";
     } else {
-      // 가장 높은 점수의 유형 선택
+      // 4가지 중 최고점
       resultType = Object.keys(typeScores).reduce((a, b) =>
         typeScores[a] > typeScores[b] ? a : b
       );
     }
 
-    // 가능성 퍼센트 계산
     const percentage = Math.round((typeScores[resultType] / totalScore) * 100);
 
     return {

@@ -4,6 +4,10 @@ defineProps({
     type: Object,
     required: true
   },
+  displayNumber: {
+    type: Number,
+    required: true
+  },
   isSelected: {
     type: Boolean,
     default: false
@@ -23,7 +27,7 @@ const handleClick = () => {
     :class="{ selected: isSelected }"
     @click="handleClick"
   >
-    <span class="choice-number">{{ choice.id }}</span>
+    <span class="choice-number">{{ displayNumber }}</span>
     <span class="choice-text">{{ choice.text }}</span>
   </button>
 </template>

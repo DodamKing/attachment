@@ -23,9 +23,10 @@ const handleSelect = (choiceId) => {
     
     <div class="choices-container">
       <ChoiceButton
-        v-for="choice in question.choices"
+        v-for="(choice, index) in question.choices"
         :key="choice.id"
         :choice="choice"
+        :displayNumber="index + 1"
         :isSelected="selectedChoiceId === choice.id"
         @select="handleSelect(choice.id)"
       />
