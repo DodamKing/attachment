@@ -122,7 +122,7 @@ export function useTest() {
     } else {
       // 4가지 중 최고점
       resultType = Object.keys(typeScores).reduce((a, b) =>
-        typeScores[a] > typeScores[b] ? a : b
+        typeScores[a] >= typeScores[b] ? a : b
       );
     }
 
